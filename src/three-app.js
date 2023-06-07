@@ -4,6 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as L from "./logic"
 import * as U from "./logic/utils"
+import { ClassNames } from "@emotion/react"
 
 const url = new URL(document.location)
 const searchParams = url.searchParams
@@ -313,7 +314,7 @@ const threeApp = () => {
     })
 
     globals.scene = new THREE.Scene()
-    globals.scene.background = new THREE.Color(0x000000)
+    globals.scene.background = new THREE.Color(0xFDFEFE)
     globals.camera = new THREE.PerspectiveCamera(34, w / h, 1, 100)
     globals.camera.position.set(3, 3, 12)
     globals.camera.lookAt(new THREE.Vector3(0, 0, 0))
@@ -433,6 +434,7 @@ const threeApp = () => {
   }
 
   return {
+    
     init,
     addSettingsChangedListener,
     removeSettingsChangedListener,
@@ -442,6 +444,7 @@ const threeApp = () => {
     setAutoRotateSpeed,
     setAxesEnabled,
     getSettings
+  
   }
 }
 

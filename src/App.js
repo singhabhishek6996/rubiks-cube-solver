@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useQueryParams } from "./useQueryParams"
 import { useThreeAppActions } from "./context"
 import SettingsButton from "./SettingsButton"
-import Version from "./Version"
+// import Version from "./Version"
 
 const App = () => {
 
@@ -30,7 +30,7 @@ const App = () => {
   return (
     <>
       <SettingsButton />
-      <Version />
+      {/* <Version /> */}
     </>
   )
 }
