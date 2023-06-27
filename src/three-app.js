@@ -5,6 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import * as L from "./logic"
 import * as U from "./logic/utils"
 import { ClassNames } from "@emotion/react"
+import { random } from "mathjs"
 
 const url = new URL(document.location)
 const searchParams = url.searchParams
@@ -84,8 +85,9 @@ const threeApp = () => {
     eventEmitter.emit(SETTINGS_CHANGED_EVENT_NAME, getSettings())
   }
 
-  globals.animationSpeed = queryParamInt("animationSpeed", 100, 1000, 750)
-  const NUM_RANDOM_MOVES = queryParamInt("randomMoves", 10, 100, 25)
+  // globals.animationSpeed = queryParamInt("animationSpeed", 100, 1000, 750)
+  globals.animationSpeed = 1000
+  const NUM_RANDOM_MOVES = 1
   const BEFORE_DELAY = queryParamInt("beforeDelay", 0, 5000, 2000)
   const AFTER_DELAY = queryParamInt("afterDelay", 0, 5000, 2000)
 
@@ -227,6 +229,10 @@ const threeApp = () => {
     return new THREE.AnimationClip(move.id, duration, tracks)
   }
 
+  // const movesString = "L, R, L', R', F, B";
+  // const cubeMoves = L.convertMovesStringToCubeMoves(3, movesString);
+  // console.log(cubeMoves); 
+
   const animateMoves = (moves, nextMoveIndex = 0) => {
 
     if (globals.cubeSizeChanged) {
@@ -236,7 +242,7 @@ const threeApp = () => {
     const move = moves[nextMoveIndex]
 
     if (!move) {
-      return setTimeout(scramble, AFTER_DELAY)
+      return
     }
 
     const pieces = L.getPieces(globals.cube, move.coordsList)
@@ -265,14 +271,31 @@ const threeApp = () => {
     clipAction.play()
   }
 
-  const showSolutionByCheating = randomMoves => {
-    const solutionMoves = randomMoves
-      .map(move => move.oppositeMoveId)
-      .map(id => L.lookupMoveId(globals.cubeSize, id))
-      .reverse()
-    console.log(`solution moves: ${solutionMoves.map(move => move.id).join(" ")}`)
-    animateMoves(solutionMoves)
-  }
+    const showSolutionByCheating = randomMoves => {
+      const solutionMoves = randomMoves
+        .map(move => move.oppositeMoveId)
+        .map(id => L.lookupMoveId(globals.cubeSize, id))
+        .reverse()
+      // console.log(`solution moves: ${solutionMoves.map(move => move.id).join(" ")}`)
+      // console.log(solutionMoves)
+      // animateMoves(solutionMoves)
+    }
+//   const showSolutionByMoves = moves => {
+//   const solutionMoves = moves
+//     .map(move => move.oppositeMoveId)
+//     .map(id => L.lookupMoveId(globals.cubeSize, id))
+//     .reverse()
+//   console.log(`solution moves: ${solutionMoves.map(move => move.id).join(" ")}`)
+//   // animateMoves(solutionMoves)
+// }
+// const myMoves = [
+//   L.lookupMoveId(globals.cubeSize, "R"),
+//   L.lookupMoveId(globals.cubeSize, "U"),
+//   L.lookupMoveId(globals.cubeSize, "R'"),
+//   L.lookupMoveId(globals.cubeSize, "U'")
+// ]
+
+// showSolutionByMoves(myMoves)
 
   const scramble = () => {
 
@@ -289,12 +312,20 @@ const threeApp = () => {
       recreateUiPieces()
     }
 
-    const randomMoves = U.range(NUM_RANDOM_MOVES).map(() => L.getRandomMove(globals.cubeSize))
-    L.removeRedundantMoves(randomMoves)
+    const inputString = "L2R2L'U2E2";
+    const sequence = L.convertStringToNumbers(inputString);
+    const length = sequence.length
+    
+    // NUM_RANDOM_MOVES = length
+    const randomMoves = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequence,length))
+    L.removeRedundantMoves(randomMoves)  
+    // console.log(randomMoves)
     console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
-    globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
+    // globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
+    console.log("threejs", randomMoves)
     resetUiPieces(globals.cube)
-    setTimeout(showSolutionByCheating, BEFORE_DELAY, randomMoves)
+    animateMoves(randomMoves)
+    // setTimeout(showSolutionByCheating, BEFORE_DELAY, randomMoves)
   }
 
   const init = async () => {
@@ -359,7 +390,7 @@ const threeApp = () => {
     globals.controls.maxDistance = 40.0
     globals.controls.enableDamping = true
     globals.controls.dampingFactor = 0.9
-    globals.controls.autoRotate = true
+    // globals.controls.autoRotate = true
     globals.controls.autoRotateSpeed = 1.0
 
     globals.clock = new THREE.Clock()

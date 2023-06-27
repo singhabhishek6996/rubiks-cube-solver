@@ -79,6 +79,7 @@ const makeMoveIdsToMoves = cubeSize => {
     ...values.map(zSlice => [zRotationMatrices3, CL.rollSliceCoordsList(allCoordsList, zSlice)])
   ]
   const nestedKvps = slices.map(makeKvpsForSlice)
+  console.log("nestedKvps", slices)
   return new Map(U.flatten(nestedKvps))
 }
 
@@ -96,7 +97,10 @@ const makeSolvedCube = cubeSize => {
 const makePerCubeSizeDataEntry = cubeSize => {
   const moveIdsToMoves = makeMoveIdsToMoves(cubeSize)
   const moves = Array.from(moveIdsToMoves.values())
+
   const solvedCube = makeSolvedCube(cubeSize)
+  console.log("cubeSize", moves)
+
   return [cubeSize, { moveIdsToMoves, moves, solvedCube }]
 }
 
@@ -117,11 +121,108 @@ export const lookupMoveId = (cubeSize, id) => {
   return perCubeSizeData.moveIdsToMoves.get(id)
 }
 
-export const getRandomMove = cubeSize => {
-  const perCubeSizeData = PER_CUBE_SIZE_DATA.get(cubeSize)
-  const randomIndex = Math.floor(Math.random() * perCubeSizeData.moves.length)
-  return perCubeSizeData.moves[randomIndex]
+export const convertMovesStringToCubeMoves = (cubeSize, movesString) => {
+  const perCubeSizeData = PER_CUBE_SIZE_DATA.get(cubeSize);
+  const moveIdsToMoves = perCubeSizeData.moveIdsToMoves;
+
+  const moves = [];
+  const movesArray = movesString.split(',').map(move => move.trim());
+
+  for (const moveString of movesArray) {
+    const move = moveIdsToMoves.get(moveString.toUpperCase());
+    if (move) {
+      moves.push(move);
+    }
+  }
+
+  return moves;
+};
+export const convertStringToNumbers = (inputString) => {
+  const map = {
+    L: 0,
+    L2: 1,
+    "L'": 2,
+    M: 3,
+    M2: 4,
+    "M'": 5,
+    "R'": 6,
+    R2: 7,
+    R: 8,
+    D: 9,
+    D2: 10,
+    "D'": 11,
+    E: 12,
+    E2: 13,
+    "E'": 14,
+    "U'": 15,
+    U2: 16,
+    U: 17,
+    "B'": 18,
+    B2: 19,
+    B: 20,
+    S: 21,
+    S2: 22,
+    "S'": 23,
+    F: 24,
+    F2: 25,
+    "F'": 26,
+  };
+
+  const inputArray = inputString.split("");
+  const result = [];
+
+  for (let i = 0; i < inputArray.length; i++) {
+    let move = inputArray[i];
+    if (move === "2" || move === "'") {
+      move = inputArray[i - 1] + move;
+      result.pop(); // remove the previous move
+    }
+    result.push(map[move]);
+  }
+
+  return result;
 }
+
+
+// console.log(sequence); // Output: [1, 7, 2, 16, 13]
+// for(let i =0;i<length;i++){
+//   console.log("sequence[i]", sequence[i])
+// }
+
+
+
+// export const getRandomMove = cubeSize => {
+//   const perCubeSizeData = PER_CUBE_SIZE_DATA.get(cubeSize)
+//   // const randomIndex = Math.floor(0.11 * perCubeSizeData.moves.length)
+//   // console.log("randomIndex", randomIndex)
+//   // console.log("perCubeSizeData.moves", perCubeSizeData.moves[randomIndex])
+  
+
+  let i =0;
+
+  export const getRandomMove = (cubeSize, sequence,length) => {
+    
+    const perCubeSizeData = PER_CUBE_SIZE_DATA.get(cubeSize);
+    const moveIndex = i % length;
+    i++;
+    console.log("length", length)
+    // for(i =0;i<length;i++){
+    
+    
+      // console.log("sequence[i]", sequence[i]);
+      // console.log("perCubeSizeData.moves", perCubeSizeData.moves[sequence[i]]);
+      // return perCubeSizeData.moves[sequence[i]];
+
+      console.log("sequence[moveIndex]", sequence[moveIndex]);
+      console.log("perCubeSizeData.moves", perCubeSizeData.moves[sequence[moveIndex]]);
+
+      return perCubeSizeData.moves[sequence[moveIndex]];
+    // }
+  };
+
+
+
+
 
 export const removeRedundantMoves = moves => {
   for (; ;) {
