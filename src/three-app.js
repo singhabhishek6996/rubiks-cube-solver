@@ -312,7 +312,7 @@ const threeApp = () => {
       recreateUiPieces()
     }
 
-    const inputString = "L2R2L'U2E2";
+    const inputString = "RUR'U'RUR'U'RUR'U'RUR'U'RUR'U'RUR'U'";
     const sequence = L.convertStringToNumbers(inputString);
     const length = sequence.length
     
@@ -320,7 +320,7 @@ const threeApp = () => {
     const randomMoves = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequence,length))
     L.removeRedundantMoves(randomMoves)  
     // console.log(randomMoves)
-    console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
+    // console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
     // globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
     console.log("threejs", randomMoves)
     resetUiPieces(globals.cube)
