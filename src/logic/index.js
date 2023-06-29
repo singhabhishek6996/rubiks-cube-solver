@@ -85,7 +85,9 @@ const makeMoveIdsToMoves = cubeSize => {
 
 const makeSolvedCube = cubeSize => {
   const { vmin, vmax } = CL.getCubeDimensions(cubeSize)
+  console.log("vmin, vmax", vmin, vmax)
   const allCoordsList = CL.makeAllCoordsList(cubeSize)
+  console.log("allCoordsList", allCoordsList)
   return allCoordsList.map(([x, y, z], index) => ({
     id: index,
     x, y, z,
@@ -93,12 +95,163 @@ const makeSolvedCube = cubeSize => {
     accTransform3: R.Identity
   }))
 }
+const cubeState = [
+  { x: -2, y: -2, z: -2 },   
+  { x: -2, y: -2, z: -1 },  
+  { x: -2, y: -2, z: 0 },  
+  { x: -2, y: -2, z: 1 },  
+  { x: -2, y: -2, z: 2 },  
+  { x: -2, y: -1, z: -2 },  
+  { x: -2, y: -1, z: -1 },  
+  { x: -2, y: -1, z: 0 },
+  { x: -2, y: -1, z: 1 },
+  { x: -2, y: -1, z: 2 },
+  { x: -2, y: 0, z: -2 },
+  { x: -2, y: 0, z: -1 },
+  { x: -2, y: 0, z: 0 },
+  { x: -2, y: 0, z: 1 },
+  { x: -2, y: 0, z: 2 },
+  { x: -2, y: 1, z: -2 },
+  { x: -2, y: 1, z: -1 },
+  { x: -2, y: 1, z: 0 },
+  { x: -2, y: 1, z: 1 },
+  { x: -2, y: 1, z: 2 },
+  { x: -2, y: 2, z: -2 },
+  { x: -2, y: 2, z: -1 },
+  { x: -2, y: 2, z: 0 },
+  { x: -2, y: 2, z: 1 },
+  { x: -2, y: 2, z: 2 },
+  { x: -1, y: -2, z: -2 },
+  { x: -1, y: -2, z: -1 },
+  { x: -1, y: -2, z: 0 },
+  { x: -1, y: -2, z: 1 },
+  { x: -1, y: -2, z: 2 },
+  { x: -1, y: -1, z: -2 },
+  { x: -1, y: -1, z: -1 },
+  { x: -1, y: -1, z: 0 },
+  { x: -1, y: -1, z: 1 },
+  { x: -1, y: -1, z: 2 },
+  { x: -1, y: 0, z: -2 },
+  { x: -1, y: 0, z: -1 },
+  { x: -1, y: 0, z: 0 },
+  { x: -1, y: 0, z: 1 },
+  { x: -1, y: 0, z: 2 },
+  { x: -1, y: 1, z: -2 },
+  { x: -1, y: 1, z: -1 },
+  { x: -1, y: 1, z: 0 },
+  { x: -1, y: 1, z: 1 },
+  { x: -1, y: 1, z: 2 },
+  { x: -1, y: 2, z: -2 },
+  { x: -1, y: 2, z: -1 },
+  { x: -1, y: 2, z: 0 },
+  { x: -1, y: 2, z: 1 },
+  { x: -1, y: 2, z: 2 },
+  { x: 0, y: -2, z: -2 },
+  { x: 0, y: -2, z: -1 },
+  { x: 0, y: -2, z: 0 },
+  { x: 0, y: -2, z: 1 },
+  { x: 0, y: -2, z: 2 },
+  { x: 0, y: -1, z: -2 },
+  { x: 0, y: -1, z: -1 },
+  { x: 0, y: -1, z: 0 },
+  { x: 0, y: -1, z: 1 },
+  { x: 0, y: -1, z: 2 },
+  { x: 0, y: 0, z: -2 },
+  { x: 0, y: 0, z: -1 },
+  { x: 0, y: 0, z: 0 },
+  { x: 0, y: 0, z: 1 },
+  { x: 0, y: 0, z: 2 },
+  { x: 0, y: 1, z: -2 },
+  { x: 0, y: 1, z: -1 },
+  { x: 0, y: 1, z: 0 },
+  { x: 0, y: 1, z: 1 },
+  { x: 0, y: 1, z: 2 },
+  { x: 0, y: 2, z: -2 },
+  { x: 0, y: 2, z: -1 },
+  { x: 0, y: 2, z: 0 },
+  { x: 0, y: 2, z: 1 },
+  { x: 0, y: 2, z: 2 },
+  { x: 1, y: -2, z: -2 },
+  { x: 1, y: -2, z: -1 },
+  { x: 1, y: -2, z: 0 },
+  { x: 1, y: -2, z: 1 },
+  { x: 1, y: -2, z: 2 },
+  { x: 1, y: -1, z: -2 },
+  { x: 1, y: -1, z: -1 },
+  { x: 1, y: -1, z: 0 },
+  { x: 1, y: -1, z: 1 },
+  { x: 1, y: -1, z: 2 },
+  { x: 1, y: 0, z: -2 },
+  { x: 1, y: 0, z: -1 },
+  { x: 1, y: 0, z: 0 },
+  { x: 1, y: 0, z: 1 },
+  { x: 1, y: 0, z: 2 },
+  { x: 1, y: 1, z: -2 },
+  { x: 1, y: 1, z: -1 },
+  { x: 1, y: 1, z: 0 },
+  { x: 1, y: 1, z: 1 },
+  { x: 1, y: 1, z: 2 },
+  { x: 1, y: 2, z: -2 },
+  { x: 1, y: 2, z: -1 },
+  { x: 1, y: 2, z: 0 },
+  { x: 1, y: 2, z: 1 },
+  { x: 1, y: 2, z: 2 },
+  { x: 2, y: -2, z: -2 },
+  { x: 2, y: -2, z: -1 },
+  { x: 2, y: -2, z: 0 },
+  { x: 2, y: -2, z: 1 },
+  { x: 2, y: -2, z: 2 },
+  { x: 2, y: -1, z: -2 },
+  { x: 2, y: -1, z: -1 },
+  { x: 2, y: -1, z: 0 },
+  { x: 2, y: -1, z: 1 },
+  { x: 2, y: -1, z: 2 },
+  { x: 2, y: 0, z: -2 },
+  { x: 2, y: 0, z: -1 },
+  { x: 2, y: 0, z: 0 },
+  { x: 2, y: 0, z: 1 },
+  { x: 2, y: 0, z: 2 },
+  { x: 2, y: 1, z: -2 },
+  { x: 2, y: 1, z: -1 },
+  { x: 2, y: 1, z: 0 },
+  { x: 2, y: 1, z: 1 },
+  { x: 2, y: 1, z: 2 },
+  { x: 2, y: 2, z: -2 },
+  { x: 2, y: 2, z: -1 },
+  { x: 2, y: 2, z: 0 },
+  { x: 2, y: 2, z: 1 },
+  { x: 2, y: 2, z: 2 }
+];
+
+console.log("stae", cubeState)
+const makeCubeFromState = (cubeSize, cubeState) => {
+  const { vmin, vmax } = CL.getCubeDimensions(cubeSize);
+  const allCoordsList = CL.makeAllCoordsList(cubeSize);
+
+  return allCoordsList.map(([x, y, z], index) => {
+    const state = cubeState[index];
+    const { x: stateX, y: stateY, z: stateZ } = state;
+
+    return {
+      id: index,
+      x: stateX,
+      y: stateY,
+      z: stateZ,
+      faces: coordsToFaces(vmin, vmax, stateX, stateY, stateZ),
+      accTransform3: R.Identity
+    };
+  });
+};
+
+
+
 
 const makePerCubeSizeDataEntry = cubeSize => {
   const moveIdsToMoves = makeMoveIdsToMoves(cubeSize)
   const moves = Array.from(moveIdsToMoves.values())
 
   const solvedCube = makeSolvedCube(cubeSize)
+  console.log("solvedCube", solvedCube)
   console.log("cubeSize", moves)
 
   return [cubeSize, { moveIdsToMoves, moves, solvedCube }]

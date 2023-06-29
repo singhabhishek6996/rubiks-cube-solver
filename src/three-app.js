@@ -86,7 +86,7 @@ const threeApp = () => {
   }
 
   // globals.animationSpeed = queryParamInt("animationSpeed", 100, 1000, 750)
-  globals.animationSpeed = 1000
+  globals.animationSpeed = 100
   const NUM_RANDOM_MOVES = 1
   const BEFORE_DELAY = queryParamInt("beforeDelay", 0, 5000, 2000)
   const AFTER_DELAY = queryParamInt("afterDelay", 0, 5000, 2000)
@@ -311,20 +311,35 @@ const threeApp = () => {
       globals.camera.lookAt(new THREE.Vector3(0, 0, 0))
       recreateUiPieces()
     }
-
-    const inputString = "RUR'U'RUR'U'RUR'U'RUR'U'RUR'U'RUR'U'";
-    const sequence = L.convertStringToNumbers(inputString);
-    const length = sequence.length
+    
+    const inputString = "R D ";
+    
+    const outputString = "D' R' ";
+    const sequencei = L.convertStringToNumbers(inputString);
+    const sequenceo = L.convertStringToNumbers(outputString);
+    const length = sequencei.length
     
     // NUM_RANDOM_MOVES = length
-    const randomMoves = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequence,length))
+    const randomMoves = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequencei,length))
     L.removeRedundantMoves(randomMoves)  
     // console.log(randomMoves)
     // console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
     // globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
     console.log("threejs", randomMoves)
     resetUiPieces(globals.cube)
+    globals.animationSpeed = 1000
     animateMoves(randomMoves)
+    // setTimeout(showSolutionByCheating, BEFORE_DELAY, randomMoves)
+
+    const randomMoves1 = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequenceo,length))
+    L.removeRedundantMoves(randomMoves1)  
+    // console.log(randomMoves)
+    // console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
+    // globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
+    console.log("threejs", randomMoves1)
+    resetUiPieces(globals.cube)
+    globals.animationSpeed = 1000
+    animateMoves(randomMoves1)
     // setTimeout(showSolutionByCheating, BEFORE_DELAY, randomMoves)
   }
 
@@ -397,6 +412,7 @@ const threeApp = () => {
     globals.animationMixer = new THREE.AnimationMixer()
 
     globals.cube = L.getSolvedCube(globals.cubeSize)
+    console.log("threejs", globals.cube)
     globals.pieceGeometry = await loadGeometry("/rubiks-cube/cube-bevelled.glb")
     createUiPieces()
 
