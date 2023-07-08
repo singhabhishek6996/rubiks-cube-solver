@@ -224,6 +224,7 @@ const cubeState = [
 ];
 
 console.log("stae", cubeState)
+
 const makeCubeFromState = (cubeSize, cubeState) => {
   const { vmin, vmax } = CL.getCubeDimensions(cubeSize);
   const allCoordsList = CL.makeAllCoordsList(cubeSize);

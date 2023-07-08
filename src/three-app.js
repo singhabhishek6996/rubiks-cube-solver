@@ -24,12 +24,12 @@ const queryParamInt = (paramName, min, max, defaultValue) => {
 }
 
 const COLOR_TABLE = {
-  "U": new THREE.Color("blue"),
-  "D": new THREE.Color("green"),
-  "L": new THREE.Color("red"),
-  "R": new THREE.Color("darkorange"),
-  "F": new THREE.Color("yellow"),
-  "B": new THREE.Color("ghostwhite"),
+  "U": new THREE.Color("ghostwhite"),
+  "D": new THREE.Color("yellow"),
+  "L": new THREE.Color("orange"),
+  "R": new THREE.Color("red"),
+  "F": new THREE.Color("green"),
+  "B": new THREE.Color("blue"),
   "-": new THREE.Color(0x282828)
 }
 
@@ -235,20 +235,21 @@ const threeApp = () => {
 
   const animateMoves = (moves, nextMoveIndex = 0) => {
 
+    console.log("hihi")
     if (globals.cubeSizeChanged) {
       return setTimeout(scramble, 0)
     }
-
+  
     const move = moves[nextMoveIndex]
-
+  
     if (!move) {
       return
     }
-
+  
     const pieces = L.getPieces(globals.cube, move.coordsList)
     const uiPieces = pieces.map(findUiPiece)
     movePiecesBetweenGroups(uiPieces, globals.puzzleGroup, globals.animationGroup)
-
+  
     const onFinished = () => {
       globals.animationMixer.removeEventListener("finished", onFinished)
       movePiecesBetweenGroups(uiPieces, globals.animationGroup, globals.puzzleGroup)
@@ -258,11 +259,13 @@ const threeApp = () => {
       for (const uiPiece of uiPieces) {
         uiPiece.applyMatrix4(rotationMatrix4)
       }
-      animateMoves(moves, nextMoveIndex + 1)
+      setTimeout(() => {
+        animateMoves(moves, nextMoveIndex + 1)
+      }, 2000); // 2000 milliseconds = 2 seconds
     }
-
+  
     globals.animationMixer.addEventListener("finished", onFinished)
-
+  
     const animationClip = createAnimationClip(move)
     const clipAction = globals.animationMixer.clipAction(
       animationClip,
@@ -270,6 +273,7 @@ const threeApp = () => {
     clipAction.setLoop(THREE.LoopOnce)
     clipAction.play()
   }
+  
 
     const showSolutionByCheating = randomMoves => {
       const solutionMoves = randomMoves
@@ -312,31 +316,32 @@ const threeApp = () => {
       recreateUiPieces()
     }
     
-    const inputString = "R D ";
+    const inputString = "";
     
-    const outputString = "D' R' ";
+    const outputString = "D2B2L2D2R2F2L2U'R'FDBL";
     const sequencei = L.convertStringToNumbers(inputString);
     const sequenceo = L.convertStringToNumbers(outputString);
-    const length = sequencei.length
+    const lengthi = sequencei.length
+    const lengtho = sequenceo.length
     
     // NUM_RANDOM_MOVES = length
-    const randomMoves = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequencei,length))
-    L.removeRedundantMoves(randomMoves)  
+    const randomMoves = U.range(lengthi).map(() => L.getRandomMove(globals.cubeSize,sequencei,lengthi))
+    // L.removeRedundantMoves(randomMoves)  
     // console.log(randomMoves)
     // console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
     // globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
-    console.log("threejs", randomMoves)
+    console.log("threejs", sequencei)
     resetUiPieces(globals.cube)
     globals.animationSpeed = 1000
-    animateMoves(randomMoves)
+    // animateMoves(randomMoves)
     // setTimeout(showSolutionByCheating, BEFORE_DELAY, randomMoves)
 
-    const randomMoves1 = U.range(length).map(() => L.getRandomMove(globals.cubeSize,sequenceo,length))
-    L.removeRedundantMoves(randomMoves1)  
+    const randomMoves1 = U.range(lengtho).map(() => L.getRandomMove(globals.cubeSize,sequenceo,lengtho))
+    // L.removeRedundantMoves(randomMoves1)  
     // console.log(randomMoves)
     // console.log(`random moves: ${randomMoves.map(move => move.id).join(" ")}`)
-    // globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
-    console.log("threejs", randomMoves1)
+    globals.cube = L.makeMoves(randomMoves, L.getSolvedCube(globals.cubeSize))
+    console.log("output string", sequenceo)
     resetUiPieces(globals.cube)
     globals.animationSpeed = 1000
     animateMoves(randomMoves1)
