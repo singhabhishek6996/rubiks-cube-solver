@@ -63,15 +63,309 @@
 
 // export default Navbar;
 import React from 'react';
+// import kociemba from "kociemba";
+const colorMapping = {
+  W: 'U', // White -> Up
+  Y: 'D', // Yellow -> Down
+  R: 'R', // Red -> Right
+  O: 'L', // Orange -> Left
+  G: 'F', // Green -> Front
+  B: 'B', // Blue -> Back
 
+  U: 'U',
+  D: 'D', 
+  R: 'R', 
+  L: 'L',
+  F: 'F',
+  B: 'B', 
+};
+
+const moves = ["U", "D", "R", "L", "F", "B", "U'", "D'", "R'", "L'", "F'", "B'"];
+
+const initialCubeState = {
+  U: ['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'],
+  R: ['R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R'],
+  F: ['G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'],
+  D: ['Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'],
+  L: ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+  B: ['B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'],
+};
+
+function getRandomInt(max) {
+return Math.floor(Math.random() * Math.floor(max));
+}
+
+function getRandomMove() {
+const randomIndex = getRandomInt(moves.length);
+return moves[randomIndex];
+}
+
+
+function applyMove(cubeState, move) {
+  const newState = { ...cubeState };
+
+  switch (move) {
+      case "U":
+      rotateFace(newState.U);
+      rotateEdges(newState, 'U');
+      break;
+      case "D":
+      rotateFace(newState.D);
+      rotateEdges(newState, 'D');
+      break;
+      case "R":
+      rotateFace(newState.R);
+      rotateEdges(newState, 'R');
+      break;
+      case "L":
+      rotateFace(newState.L);
+      rotateEdges(newState, 'L');
+      break;
+      case "F":
+      rotateFace(newState.F);
+      rotateEdges(newState, 'F');
+      break;
+      case "B":
+      rotateFace(newState.B);
+      rotateEdges(newState, 'B');
+      break;
+      case "U'":
+      rotateFace(newState.U);
+      rotateFace(newState.U);
+      rotateFace(newState.U);
+      rotateEdges(newState, 'U');
+      rotateEdges(newState, 'U');
+      rotateEdges(newState, 'U');
+      break;
+      case "D'":
+      rotateFace(newState.D);
+      rotateFace(newState.D);
+      rotateFace(newState.D);
+      rotateEdges(newState, 'D');
+      rotateEdges(newState, 'D');
+      rotateEdges(newState, 'D');
+      break;
+      case "R'":
+      rotateFace(newState.R);
+      rotateFace(newState.R);
+      rotateFace(newState.R);
+      rotateEdges(newState, 'R');
+      rotateEdges(newState, 'R');
+      rotateEdges(newState, 'R');
+      break;
+      case "L'":
+      rotateFace(newState.L);
+      rotateFace(newState.L);
+      rotateFace(newState.L);
+      rotateEdges(newState, 'L');
+      rotateEdges(newState, 'L');
+      rotateEdges(newState, 'L');
+      break;
+      case "F'":
+      rotateFace(newState.F);
+      rotateFace(newState.F);
+      rotateFace(newState.F);
+      rotateEdges(newState, 'F');
+      rotateEdges(newState, 'F');
+      rotateEdges(newState, 'F');
+      break;
+      case "B'":
+      rotateFace(newState.B);
+      rotateFace(newState.B);
+      rotateFace(newState.B);
+      rotateEdges(newState, 'B');
+      rotateEdges(newState, 'B');
+      rotateEdges(newState, 'B');
+      break;
+  }
+
+  return newState;
+}
+
+function rotateFace(face) {
+  const temp = [...face];
+  face[0] = temp[6];
+  face[1] = temp[3];
+  face[2] = temp[0];
+  face[3] = temp[7];
+  face[4] = temp[4];
+  face[5] = temp[1];
+  face[6] = temp[8];
+  face[7] = temp[5];
+  face[8] = temp[2];
+}
+
+function rotateEdges(tempState, type) {
+
+  if(type === 'U')
+  {
+      const temp = [...tempState.F];
+
+      tempState.F[0] = tempState.R[0];
+      tempState.F[1] = tempState.R[1];
+      tempState.F[2] = tempState.R[2];
+
+      tempState.R[0] = tempState.B[0];
+      tempState.R[1] = tempState.B[1];
+      tempState.R[2] = tempState.B[2];
+
+      tempState.B[0] = tempState.L[0];
+      tempState.B[1] = tempState.L[1];
+      tempState.B[2] = tempState.L[2];
+
+      tempState.L[0] = temp[0];
+      tempState.L[1] = temp[1];
+      tempState.L[2] = temp[2];
+  }
+  else if(type === 'D')
+  {
+      const temp = [...tempState.F];
+      tempState.F[6] = tempState.L[6];
+      tempState.F[7] = tempState.L[7];
+      tempState.F[8] = tempState.L[8];
+
+      tempState.L[6] = tempState.B[6];
+      tempState.L[7] = tempState.B[7];
+      tempState.L[8] = tempState.B[8];
+
+      tempState.B[6] = tempState.R[6];
+      tempState.B[7] = tempState.R[7];
+      tempState.B[8] = tempState.R[8];
+
+      tempState.R[6] = temp[6];
+      tempState.R[7] = temp[7];
+      tempState.R[8] = temp[8];
+  }
+  else if(type === 'R')
+  {
+      const temp = [...tempState.F];
+      tempState.F[2] = tempState.D[2];
+      tempState.F[5] = tempState.D[5];
+      tempState.F[8] = tempState.D[8];
+
+      tempState.D[2] = tempState.B[6];
+      tempState.D[5] = tempState.B[3];
+      tempState.D[8] = tempState.B[0];
+
+      tempState.B[6] = tempState.U[2];
+      tempState.B[3] = tempState.U[5];
+      tempState.B[0] = tempState.U[8];
+
+      tempState.U[2] = temp[2];
+      tempState.U[5] = temp[5];
+      tempState.U[8] = temp[8];
+
+  }
+  else if(type === 'L')
+  {
+      const temp = [...tempState.F];
+      tempState.F[0] = tempState.U[0];
+      tempState.F[3] = tempState.U[3];
+      tempState.F[6] = tempState.U[6];
+
+      tempState.U[0] = tempState.B[8];
+      tempState.U[3] = tempState.B[5];
+      tempState.U[6] = tempState.B[2];
+
+      tempState.B[8] = tempState.D[0];
+      tempState.B[5] = tempState.D[3];
+      tempState.B[2] = tempState.D[6];
+
+      tempState.D[0] = temp[0];
+      tempState.D[3] = temp[3];
+      tempState.D[6] = temp[6];
+  }
+  else if(type === 'F')
+  {
+      const temp = [...tempState.U];
+      tempState.U[8] = tempState.L[2];
+      tempState.U[7] = tempState.L[5];
+      tempState.U[6] = tempState.L[8];
+
+      tempState.L[2] = tempState.D[0];
+      tempState.L[5] = tempState.D[1];
+      tempState.L[8] = tempState.D[2];
+
+      tempState.D[2] = tempState.R[0];
+      tempState.D[1] = tempState.R[3];
+      tempState.D[0] = tempState.R[6];
+
+      tempState.R[0] = temp[6];
+      tempState.R[3] = temp[7];
+      tempState.R[6] = temp[8];
+  }
+  else if(type === 'B')
+  {
+      const temp = [...tempState.U];
+      tempState.U[0] = tempState.R[2];
+      tempState.U[1] = tempState.R[5];
+      tempState.U[2] = tempState.R[8];
+
+      tempState.R[2] = tempState.D[8];
+      tempState.R[5] = tempState.D[7];
+      tempState.R[8] = tempState.D[6];
+
+      tempState.D[6] = tempState.L[0];
+      tempState.D[7] = tempState.L[3];
+      tempState.D[8] = tempState.L[6];
+
+      tempState.L[0] = temp[2];
+      tempState.L[3] = temp[1];
+      tempState.L[6] = temp[0];
+  }
+
+  return tempState;
+}
+
+function getRandomScramble(numMoves) {
+  let scramble = "";
+  let cubeState = { ...initialCubeState };
+
+  for (let i = 0; i < numMoves; i++) {
+      let randomMove = getRandomMove();
+
+      scramble += randomMove + " ";
+      cubeState = applyMove(cubeState, randomMove);
+  }
+
+  return { scramble: scramble.trim(), cubeState };
+}
+
+function getColors(cubeState) {
+  let colors = "";
+
+  Object.keys(cubeState).forEach((face) => {
+      const faceColors = cubeState[face];
+      faceColors.forEach((color) => {
+      colors += color;
+      });
+});
+
+  return colors;
+}
+
+let scrambledColors;
 function Navbar() {
   const handleScramble = () => {
     // Logic to scramble the cube goes here
+    const { scramble, cubeState: scrambledState } = getRandomScramble(20);
+    scrambledColors = getColors(scrambledState);
+    console.log(scramble,scrambledColors);
+    // these variables contain the scramblled state
     console.log('Cube scrambled!');
   };
 
   const handleSolve = () => {
     // Logic to solve the cube goes here
+    let cubeState = '';
+
+    for (let i = 0; i < 54; i++) {
+      const color = colorMapping[scrambledColors[i]];
+      cubeState += color || '?';
+    }
+
+    // const solution = kociemba.solve(cubeState);
+    // console.log(solution);
     console.log('Cube solved!');
   };
 
