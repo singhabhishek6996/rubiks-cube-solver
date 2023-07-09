@@ -1,42 +1,42 @@
-# Description
+# Rubik's Cube Solver
 
-A [three.js](https://threejs.org/) visualisation of solving a Rubik's cube.
+This repository contains the source code and documentation for a website that solves the Rubik's Cube. The website allows users to input the current state of their Rubik's Cube and provides a step-by-step solution to solve it.
 
-# Status
+## Features
+* User-friendly interface to input the current state of the Rubik's Cube.
+* Rubik's Cube visualization to display the current state and the solution.
+* Step-by-step instructions to solve the Rubik's Cube.
+* Algorithm generator to create new scramble sequences for the Rubik's Cube.
 
-Currently, I have not implemented the solving part. Instead, I am cheating
-by using a reversed list of opposite moves as the solution.
+## Technologies Used
+The website is built using the following technologies:
 
-# Query Params
+* **HTML** and **CSS** for the frontend user interface.
+* **JavaScript** for handling user interactions and generating the solution.
+* **[Kociemba](https://www.npmjs.com/package/kociemba)** npm package for solving the Rubik's Cube.
+* **Three.js** for rendering the Rubik's Cube visualization.
+* **Git** for version control and collaboration.
 
-The following query params can be added:
+## Getting Started
+To get a local copy of the project up and running, follow these steps:
 
-| Query Param | Description | Values | Default |
-| ----------- | ----------- | ------ | ------- |
-| cubeSize        | The size of the cube | 2-5 | 3 |
-| animationSpeed  | How quickly to animate the moves | 100-5000 ms | 750 ms |
-| autoRotate      | Auto rotate the cube as it is solving | bool | true |
-| autoRotateSpeed | Speed of auto rotatation (if enabled) | 0-10000 ms | 1000 ms |
-| axesEnabled     | Draw the X, Y and Z axes | bool | false |
+1. Clone the repository: git clone `https://github.com/singhabhishek6996/rubiks-cube-solver.git`
+2. Navigate to the project directory: `cd rubiks-cube-solver`
+3. Run `npm install` to install the necessary dependencies.
+4. Run `npm start` to start the local development server.
+5. Open your web browser and go to `http://localhost:3000` to view the website.
 
-## Examples
+## Usage
+1. Launch the website by opening http://localhost:3000 in your web browser.
+2. Click the `Scramble` button to generate the random scramble
+3. Click the `Solve` button to generate the solution.
+4. The solution will be computed using the **Kociemba Algorithm** provided by the kociemba npm package.
+5. Follow the step-by-step instructions provided to solve the Rubik's Cube.
+6. Enjoy the Rubik's Cube visualization and experiment with different scramble sequences.
 
-* https://taylorjg.github.io/rubiks-cube?animationSpeed=250
-* https://taylorjg.github.io/rubiks-cube?animationSpeed=250&cubeSize=2
-* https://taylorjg.github.io/rubiks-cube?animationSpeed=250&cubeSize=4
-* https://taylorjg.github.io/rubiks-cube?animationSpeed=250&cubeSize=4&axesEnabled
+## Contact
+If you have any questions, suggestions, or feedback, please feel free to contact the project team:
 
-# TODO
-
-* ~~Improve the look of the cube pieces~~
-* ~~Add a slide-out panel to configure the size, speed etc~~
-* Implement an algorithm to solve the cube properly
-
-# Links
-
-* [Rubik's Cube - Wikipedia](https://en.wikipedia.org/wiki/Rubik%27s_Cube)
-* [three.js documentation](https://threejs.org/docs/index.html)
-* [Some examples of how to manually create AnimationClips](https://threejs.org/examples/js/animation/AnimationClipCreator.js)
-    * this link came from [the three.js documentation for KeyframeTrack](https://threejs.org/docs/index.html#api/animation/KeyframeTrack)
-* [Rubik's Cube Notation - How to read the rotation letters](https://ruwix.com/the-rubiks-cube/notation/)
-* [Advanced Rubik's Cube Notation](https://ruwix.com/the-rubiks-cube/notation/advanced/)
+* **[Samyak Jain](https://github.com/samyak1512)** (Role: Frontend Developer)
+* **[Aditya Agarwal](https://github.com/devLucario)** (Role: Backend Developer)
+* **[Abhishek Singh](https://github.com/singhabhishek6996)** (Role: Backend Developer)
